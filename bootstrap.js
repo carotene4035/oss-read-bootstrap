@@ -2378,6 +2378,7 @@
 
 
       Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
+        console.log(this);
         return this.each(function () {
           var data = $$$1(this).data(DATA_KEY);
 
@@ -2421,6 +2422,10 @@
      */
 
 
+    console.log(Event.CLICK_DATA_API);
+    console.log(Selector.DATA_TOGGLE);
+
+    /** ここで、クリックされた時のcall back関数を登録している */
     $$$1(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
       var _this10 = this;
 
@@ -2450,6 +2455,7 @@
         });
       });
 
+      /** あれ、、ここでmodalが生成されている なるほど。。。 */
       Modal._jQueryInterface.call($$$1(target), config, this);
     });
     /**
@@ -3930,7 +3936,6 @@
   exports.Tooltip = Tooltip;
 
   Object.defineProperty(exports, '__esModule', { value: true });
-  console.log(exports);
 
 })));
 //# sourceMappingURL=bootstrap.js.map
