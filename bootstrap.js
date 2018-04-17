@@ -150,7 +150,7 @@
         return prefix;
       },
       getSelectorFromElement: function getSelectorFromElement(element) {
-        var selector = element.getAttribute('data-target');
+        var selector = element.getAttribute('data-target'); // modalの場合はexample modal
 
         if (!selector || selector === '#') {
           selector = element.getAttribute('href') || '';
@@ -2378,24 +2378,33 @@
 
 
       Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
-        console.log(this);
         return this.each(function () {
+          /** thisはmodalとして表示される要素 */
           var data = $$$1(this).data(DATA_KEY);
 
           var _config = _objectSpread({}, Modal.Default, $$$1(this).data(), typeof config === 'object' && config);
 
+          /*
+           * dataには、 modalオブジェクトが入る
+           *   $$$1(this).data(DATA_KEY, data)とすることにより、
+           *   modalオブジェクトは、その要素のdata属性として保持される
+           * !!! このように、data属性には配列やオブジェクトを格納することができる !!!
+           */
           if (!data) {
             data = new Modal(this, _config);
             $$$1(this).data(DATA_KEY, data);
           }
 
+          /** modalを開くか、toggleするかを切り替えている */
           if (typeof config === 'string') {
+            /** toggle */
             if (typeof data[config] === 'undefined') {
               throw new TypeError("No method named \"" + config + "\"");
             }
-
+            /** modalオブジェクトのtoggleが呼び出され、開く、もしくは閉じたりする */
             data[config](relatedTarget);
           } else if (_config.show) {
+            /** modalオブジェクトのshowが呼び出され、開く */
             data.show(relatedTarget);
           }
         });
@@ -2420,50 +2429,54 @@
      * Data Api implementation
      * ------------------------------------------------------------------------
      */
-
-
     console.log(Event.CLICK_DATA_API);
-    console.log(Selector.DATA_TOGGLE);
+    console.log(Selector.DATA_TOGGLE); // [data-toggle="modal"]
 
-    /** ここで、クリックされた時のcall back関数を登録している */
+    /** modalを呼び出す要素をclickした時にmodalが開けるよう、clickイベントを登録している */
     $$$1(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
+      /**
+       * thisはmodalを呼び出す要素のこと。targetは表示されるmodal自身。
+       */
       var _this10 = this;
 
       var target;
-      var selector = Util.getSelectorFromElement(this);
+      /** modalに開くtriggerに紐付けられているdata-targetを取得 */
+      var selector = Util.getSelectorFromElement(this); // 今回は#exampleModal
 
       if (selector) {
-        target = $$$1(selector)[0];
+        target = $$$1(selector)[0]; // 開くmodalをjQueryオブジェクトとして取得
       }
 
       var config = $$$1(target).data(DATA_KEY) ? 'toggle' : _objectSpread({}, $$$1(target).data(), $$$1(this).data());
 
+      /** modalを呼び出す要素がaタグ、areaタグのときはdefaultの挙動をリセットする */
       if (this.tagName === 'A' || this.tagName === 'AREA') {
         event.preventDefault();
       }
 
+      /** modalが表示された時に、一度だけこのイベントを登録する */
       var $target = $$$1(target).one(Event.SHOW, function (showEvent) {
         if (showEvent.isDefaultPrevented()) {
           // Only register focus restorer if modal will actually get shown
           return;
         }
 
-        $target.one(Event.HIDDEN, function () {
+        /** modalが消えたときに、modalを呼び出した要素にfocusにするようにしている */
+        $target.on(Event.HIDDEN, function () {
           if ($$$1(_this10).is(':visible')) {
             _this10.focus();
           }
         });
       });
 
-      /** あれ、、ここでmodalが生成されている なるほど。。。 */
       Modal._jQueryInterface.call($$$1(target), config, this);
     });
+
     /**
      * ------------------------------------------------------------------------
      * jQuery
      * ------------------------------------------------------------------------
      */
-
     $$$1.fn[NAME] = Modal._jQueryInterface;
     $$$1.fn[NAME].Constructor = Modal;
 
