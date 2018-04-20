@@ -1962,10 +1962,19 @@
     var Modal =
     /*#__PURE__*/
     function () {
+
+      /** クラス定義: 最後にreturnで返される */
       function Modal(element, config) {
         this._config = this._getConfig(config);
+
+        // elementには、modal本体 + overlayのdomが入っている
         this._element = element;
+        console.log(this._element);
+
+        // dialogには、modal本体のdomが入っている
         this._dialog = $$$1(element).find(Selector.DIALOG)[0];
+        console.log(this._dialog);
+
         this._backdrop = null;
         this._isShown = false;
         this._isBodyOverflowing = false;
@@ -1978,6 +1987,8 @@
 
       // Public
       _proto.toggle = function toggle(relatedTarget) {
+        console.log(relatedTarget); // 呼び出しボタンのdomが入っている
+        /** 見えているかどうかでhideするかshowするかをわけている */
         return this._isShown ? this.hide() : this.show(relatedTarget);
       };
 
@@ -2015,6 +2026,7 @@
 
         this._setResizeEvent();
 
+        /** modalオブジェクトのボタンにclickイベントを追加 */
         $$$1(this._element).on(Event.CLICK_DISMISS, Selector.DATA_DISMISS, function (event) {
           return _this.hide(event);
         });
@@ -2389,6 +2401,7 @@
            *   $$$1(this).data(DATA_KEY, data)とすることにより、
            *   modalオブジェクトは、その要素のdata属性として保持される
            * !!! このように、data属性には配列やオブジェクトを格納することができる !!!
+           * !!! つまり、その要素の「状態(modal開いてるor閉じてるとか)」を配列やオブジェクトで保持することができるってこと !!!
            */
           if (!data) {
             data = new Modal(this, _config);
@@ -2432,19 +2445,37 @@
     console.log(Event.CLICK_DATA_API);
     console.log(Selector.DATA_TOGGLE); // [data-toggle="modal"]
 
-    /** modalを呼び出す要素をclickした時にmodalが開けるよう、clickイベントを登録している */
+    /*
+     * ここで、data属性にtoggleclickするとmodalを開くイベントを登録
+     * ↓ selectorを指定すると、後から動的に追加したものについてもmodalが開けるようになる
+     */
     $$$1(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
-      /**
-       * thisはmodalを呼び出す要素のこと。targetは表示されるmodal自身。
+      /*
+       * thisはmodalを呼び出す要素
+       *  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+       *   Launch demo modal
+       *  </button>
        */
       var _this10 = this;
 
       var target;
-      /** modalに開くtriggerに紐付けられているdata-targetを取得 */
-      var selector = Util.getSelectorFromElement(this); // 今回は#exampleModal
+
+      /*
+       *  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
+       *   Launch demo modal
+       *  </button>
+       *  のdata-targetの内容を取得.
+       *  今回はexampleModal
+       */
+      var selector = Util.getSelectorFromElement(this);
 
       if (selector) {
-        target = $$$1(selector)[0]; // 開くmodalをjQueryオブジェクトとして取得
+        /*
+         * target(modal本体)の取得
+         *  DOM全体からdata-target='#exampleModal'を持つdomを取得し、
+         *  jQuery Object化
+         */
+        target = $$$1(selector)[0];
       }
 
       var config = $$$1(target).data(DATA_KEY) ? 'toggle' : _objectSpread({}, $$$1(target).data(), $$$1(this).data());
@@ -2469,6 +2500,7 @@
         });
       });
 
+      /** targetはmodal本体。modalを開くor閉じる処理の呼び出し */
       Modal._jQueryInterface.call($$$1(target), config, this);
     });
 
@@ -3952,3 +3984,4 @@
 
 })));
 //# sourceMappingURL=bootstrap.js.map
+//
