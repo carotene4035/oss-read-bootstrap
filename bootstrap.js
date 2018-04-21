@@ -429,10 +429,12 @@
     var Button =
     /*#__PURE__*/
     function () {
+
+      /** Buttonクラス */
       function Button(element) {
+        /** button本体のdomが入る */
         this._element = element;
       } // Getters
-
 
       var _proto = Button.prototype;
 
@@ -477,6 +479,7 @@
         }
 
         if (triggerChangeEvent) {
+          /** */
           $$$1(this._element).toggleClass(ClassName.ACTIVE);
         }
       };
@@ -493,6 +496,7 @@
 
           if (!data) {
             data = new Button(this);
+            /** buttonのbs.buttonというデータ属性にbuttonオブジェクトを保持させる */
             $$$1(this).data(DATA_KEY, data);
           }
 
@@ -518,17 +522,29 @@
      */
 
 
+    /*
+     * data-toggle='button'が登録されたdomに対して、イベントを定義しているだけ
+     */
     $$$1(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE_CARROT, function (event) {
       event.preventDefault();
+      /** buttonのdomを取得 */
       var button = event.target;
 
       if (!$$$1(button).hasClass(ClassName.BUTTON)) {
         button = $$$1(button).closest(Selector.BUTTON);
       }
-
+      /*
+       * 実際のdom操作を行うapiを呼び出す
+       */
       Button._jQueryInterface.call($$$1(button), 'toggle');
     }).on(Event.FOCUS_BLUR_DATA_API, Selector.DATA_TOGGLE_CARROT, function (event) {
+      /** focusイベントのイベントハンドラを登録 */
       var button = $$$1(event.target).closest(Selector.BUTTON)[0];
+      /*
+       * focusクラスの取り付け・取り外しを行う
+       */
+      console.log(event.type); // focusin || focusout を返す
+      // イベントがfocusinならfocus classを追加。focusoutならfocus classを削除。
       $$$1(button).toggleClass(ClassName.FOCUS, /^focus(in)?$/.test(event.type));
     });
     /**
