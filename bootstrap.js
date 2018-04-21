@@ -490,6 +490,7 @@
       }; // Static
 
 
+      /** configに渡される文字列によって、buttonオブジェクトの操作方法が変わる */
       Button._jQueryInterface = function _jQueryInterface(config) {
         return this.each(function () {
           var data = $$$1(this).data(DATA_KEY);
