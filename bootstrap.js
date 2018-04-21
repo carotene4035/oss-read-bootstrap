@@ -1898,6 +1898,7 @@
    * --------------------------------------------------------------------------
    */
 
+  /** ここでいうModalは名前空間的な存在 */
   var Modal = function ($$$1) {
     /**
      * ------------------------------------------------------------------------
@@ -1987,7 +1988,6 @@
 
       // Public
       _proto.toggle = function toggle(relatedTarget) {
-        console.log(relatedTarget); // 呼び出しボタンのdomが入っている
         /** 見えているかどうかでhideするかshowするかをわけている */
         return this._isShown ? this.hide() : this.show(relatedTarget);
       };
@@ -1999,13 +1999,18 @@
           return;
         }
 
+        /** fadeがある場合 */
         if ($$$1(this._element).hasClass(ClassName.FADE)) {
+          console.log('aaaa');
           this._isTransitioning = true;
         }
 
         var showEvent = $$$1.Event(Event.SHOW, {
           relatedTarget: relatedTarget
         });
+
+
+        /** ここでmodalを表示しているはず、何だけど。。。 */
         $$$1(this._element).trigger(showEvent);
 
         if (this._isShown || showEvent.isDefaultPrevented()) {
@@ -2038,6 +2043,13 @@
           });
         });
 
+        /**
+         * backdropが表示し終わった後のcallback関数が、
+         * modalを表示させている
+         *
+         * callback関数を渡せるようにしているのは、
+         * 使い回しができるからかな？？？
+         */
         this._showBackdrop(function () {
           return _this._showElement(relatedTarget);
         });
@@ -2051,6 +2063,7 @@
         }
 
         if (this._isTransitioning || !this._isShown) {
+          console.log('aaa');
           return;
         }
 
@@ -2066,6 +2079,7 @@
 
         if (transition) {
           this._isTransitioning = true;
+          console.log('aaa');
         }
 
         this._setEscapeEvent();
@@ -2123,7 +2137,7 @@
 
         this._element.style.display = 'block';
 
-        this._element.removeAttribute('aria-hidden');
+//        this._element.removeAttribute('aria-hidden');
 
         this._element.scrollTop = 0;
 
@@ -2131,7 +2145,7 @@
           Util.reflow(this._element);
         }
 
-        $$$1(this._element).addClass(ClassName.SHOW);
+       $$$1(this._element).addClass(ClassName.SHOW);
 
         if (this._config.focus) {
           this._enforceFocus();
@@ -2225,15 +2239,20 @@
       };
 
       _proto._showBackdrop = function _showBackdrop(callback) {
+        /*
+         * backdrop(背景)の表示処理
+         */
         var _this8 = this;
 
         var animate = $$$1(this._element).hasClass(ClassName.FADE) ? ClassName.FADE : '';
 
         if (this._isShown && this._config.backdrop) {
+          /** backdropのdomを生成 */
           this._backdrop = document.createElement('div');
           this._backdrop.className = ClassName.BACKDROP;
 
           if (animate) {
+            /** fadeを追加 */
             $$$1(this._backdrop).addClass(animate);
           }
 
@@ -2390,6 +2409,7 @@
 
 
       Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
+        console.log(this);
         return this.each(function () {
           /** thisはmodalとして表示される要素 */
           var data = $$$1(this).data(DATA_KEY);
@@ -2442,8 +2462,6 @@
      * Data Api implementation
      * ------------------------------------------------------------------------
      */
-    console.log(Event.CLICK_DATA_API);
-    console.log(Selector.DATA_TOGGLE); // [data-toggle="modal"]
 
     /*
      * ここで、data属性にtoggleclickするとmodalを開くイベントを登録
@@ -2492,7 +2510,7 @@
           return;
         }
 
-        /** modalが消えたときに、modalを呼び出した要素にfocusにするようにしている */
+        /** modalが消えたときに、modalを呼び出した要素(button)にfocusにするようにしている */
         $target.on(Event.HIDDEN, function () {
           if ($$$1(_this10).is(':visible')) {
             _this10.focus();
