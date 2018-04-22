@@ -544,7 +544,6 @@
       /*
        * focusクラスの取り付け・取り外しを行う
        */
-      console.log(event.type); // focusin || focusout を返す
       // イベントがfocusinならfocus classを追加。focusoutならfocus classを削除。
       $$$1(button).toggleClass(ClassName.FOCUS, /^focus(in)?$/.test(event.type));
     });
@@ -1987,11 +1986,9 @@
 
         // elementには、modal本体 + overlayのdomが入っている
         this._element = element;
-        console.log(this._element);
 
         // dialogには、modal本体のdomが入っている
         this._dialog = $$$1(element).find(Selector.DIALOG)[0];
-        console.log(this._dialog);
 
         this._backdrop = null;
         this._isShown = false;
@@ -2018,7 +2015,6 @@
 
         /** fadeがある場合 */
         if ($$$1(this._element).hasClass(ClassName.FADE)) {
-          console.log('aaaa');
           this._isTransitioning = true;
         }
 
@@ -2080,7 +2076,6 @@
         }
 
         if (this._isTransitioning || !this._isShown) {
-          console.log('aaa');
           return;
         }
 
@@ -2096,7 +2091,6 @@
 
         if (transition) {
           this._isTransitioning = true;
-          console.log('aaa');
         }
 
         this._setEscapeEvent();
@@ -2426,7 +2420,11 @@
 
 
       Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
-        console.log(this);
+        /** domそのもの */
+//        console.log(relatedTarget);
+        /** jqueryオブジェクト */
+//        console.log(this);
+
         return this.each(function () {
           /** thisはmodalとして表示される要素 */
           var data = $$$1(this).data(DATA_KEY);
@@ -2485,6 +2483,7 @@
      * ↓ selectorを指定すると、後から動的に追加したものについてもmodalが開けるようになる
      */
     $$$1(document).on(Event.CLICK_DATA_API, Selector.DATA_TOGGLE, function (event) {
+      // console.log(this);
       /*
        * thisはmodalを呼び出す要素
        *  <button type="button" class="btn btn-primary" data-toggle="modal" data-target="#exampleModal">
@@ -2535,6 +2534,7 @@
         });
       });
 
+      console.log(Modal._jQueryInterface);
       /** targetはmodal本体。modalを開くor閉じる処理の呼び出し */
       Modal._jQueryInterface.call($$$1(target), config, this);
     });
@@ -2544,6 +2544,10 @@
      * jQuery
      * ------------------------------------------------------------------------
      */
+    // ここから下がマジでわかんねえよ
+    // 少しわかった。こうするとjqueryからmodalを操作することができるのか
+    // 指定のmodalを操作することができる。だから、bootstrapのファイル外からmodalを操作することができる。
+    // 例えば、buttonをクリックセずに、突然modalを表示したりとか。。。できるな。
     $$$1.fn[NAME] = Modal._jQueryInterface;
     $$$1.fn[NAME].Constructor = Modal;
 
