@@ -2425,6 +2425,8 @@
         /** jqueryオブジェクト */
 //        console.log(this);
 
+        /** なんでここにreturnいれてあるの？？？ */
+        // jquery interfaceを用いて操作したjquery objectをconsole, もしくはscriptにたいして返すため */
         return this.each(function () {
           /** thisはmodalとして表示される要素 */
           var data = $$$1(this).data(DATA_KEY);
