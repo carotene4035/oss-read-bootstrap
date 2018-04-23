@@ -109,6 +109,7 @@
           }
 
           return undefined; // eslint-disable-line no-undefined
+
         }
       };
     }
@@ -152,6 +153,7 @@
       getSelectorFromElement: function getSelectorFromElement(element) {
         var selector = element.getAttribute('data-target'); // modalの場合はexample modal
 
+        /** カルーセルの場合はhrefにselectorが保持されている */
         if (!selector || selector === '#') {
           selector = element.getAttribute('href') || '';
         }
@@ -767,6 +769,7 @@
       _proto._addEventListeners = function _addEventListeners() {
         var _this2 = this;
 
+        /** キーボードイベントの登録 */
         if (this._config.keyboard) {
           $$$1(this._element).on(Event.KEYDOWN, function (event) {
             return _this2._keydown(event);
@@ -962,6 +965,7 @@
           var data = $$$1(this).data(DATA_KEY);
 
           var _config = _objectSpread({}, Default, $$$1(this).data());
+          console.log(_config);
 
           if (typeof config === 'object') {
             _config = _objectSpread({}, _config, config);
@@ -970,6 +974,7 @@
           var action = typeof config === 'string' ? config : _config.slide;
 
           if (!data) {
+            /** カルーセルオブジェクトの生成/つまり初期化 */
             data = new Carousel(this, _config);
             $$$1(this).data(DATA_KEY, data);
           }
@@ -990,7 +995,10 @@
       };
 
       Carousel._dataApiClickHandler = function _dataApiClickHandler(event) {
+        console.log(event);
+        console.log(this);
         var selector = Util.getSelectorFromElement(this);
+        console.log(selector);
 
         if (!selector) {
           return;
@@ -1002,6 +1010,9 @@
           return;
         }
 
+        /** カルーセルのデータが入っている */
+        console.log($$$1(target).data());
+
         var config = _objectSpread({}, $$$1(target).data(), $$$1(this).data());
 
         var slideIndex = this.getAttribute('data-slide-to');
@@ -1010,6 +1021,8 @@
           config.interval = false;
         }
 
+        console.log(config);
+        /** カルーセルの操作 */
         Carousel._jQueryInterface.call($$$1(target), config);
 
         if (slideIndex) {
@@ -1040,7 +1053,10 @@
      */
 
 
+    /** カルーセルをスライドさせるボタンに、clickイベントを実装 */
     $$$1(document).on(Event.CLICK_DATA_API, Selector.DATA_SLIDE, Carousel._dataApiClickHandler);
+
+    /** カルーセルオブジェクトの初期化 */
     $$$1(window).on(Event.LOAD_DATA_API, function () {
       $$$1(Selector.DATA_RIDE).each(function () {
         var $carousel = $$$1(this);
