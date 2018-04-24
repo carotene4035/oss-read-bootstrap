@@ -995,6 +995,10 @@
       };
 
       Carousel._dataApiClickHandler = function _dataApiClickHandler(event) {
+        /**
+         * clickした矢印から、操作先のカルーセル情報を取得し、
+         * カルーセルがもつメソッドにアクセスして動かす
+         */
         console.log(event);
         console.log(this);
         var selector = Util.getSelectorFromElement(this);
