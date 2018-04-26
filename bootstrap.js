@@ -2570,6 +2570,8 @@
     // 少しわかった。こうするとjqueryからmodalを操作することができるのか
     // 指定のmodalを操作することができる。だから、bootstrapのファイル外からmodalを操作することができる。
     // 例えば、buttonをクリックセずに、突然modalを表示したりとか。。。できるな。
+
+    /** $('#modalElement').modal() の形で使えるようになる */
     $$$1.fn[NAME] = Modal._jQueryInterface;
     $$$1.fn[NAME].Constructor = Modal;
 
