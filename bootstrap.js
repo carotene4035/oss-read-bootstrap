@@ -2439,6 +2439,8 @@
       }; // Static
 
 
+      /** プロトタイプをつけないと、Modal関数オブジェクトの静的メンバになる */
+      /** インスタンスからは参照できない。Modal関数オブジェクトから呼び出して使う */
       Modal._jQueryInterface = function _jQueryInterface(config, relatedTarget) {
         /** domそのもの */
 //        console.log(relatedTarget);
